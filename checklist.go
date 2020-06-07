@@ -32,7 +32,7 @@ type ChecklistItem struct {
 	NameData struct {
 		Emoji struct{} `json:"emoji"`
 	} `json:"nameData"`
-	Pos int `json:"pos"`
+	Pos float32 `json:"pos"`
 }
 
 func (i *ChecklistItem) Delete() error {
@@ -72,11 +72,11 @@ func (c *Checklist) AddItem(name string, pos *string, checked *bool) (*Checklist
 	payload.Set("name", name)
 	if pos != nil {
 		if *pos != "top" && *pos != "bottom" {
-			i, err := strconv.Atoi(*pos)
+			i, err := strconv.ParseFloat(*pos, 64)
 			if err != nil {
 				return nil, err
 			}
-			if i < 1 {
+			if i < 1.0 {
 				return nil, fmt.Errorf("Checklist item position %q is invalid. Only 'top', 'bottom', or a positive integer", *pos)
 			}
 		}
